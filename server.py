@@ -4,10 +4,8 @@ import sys
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-server = ''
+server = socket.gethostname()
 PORT = 1223
-
-self_ip = socket.gethostbyname(server)
 
 try:
     s.bind((server, PORT))
@@ -20,11 +18,7 @@ print("Waiting for a connection...")
 current_id = '0'
 
 def unique_client(connection):
-    return
-
-
-
-
+    connection.send(bytes("Test message", "utf-8"))
 
 
 
