@@ -5,17 +5,15 @@ import sys
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 server = socket.gethostname()
-PORT = 1223
+PORT = 1234
 
 try:
     s.bind((server, PORT))
 except socket.error as e:
     print(str(e))
 
-s.listen(2)
+s.listen(1)
 print("Waiting for a connection...")
-
-current_id = '0'
 
 def unique_client(connection):
     connection.send(bytes("Test message", "utf-8"))
