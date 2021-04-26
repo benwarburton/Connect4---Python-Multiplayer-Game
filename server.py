@@ -1,6 +1,7 @@
 import socket
 from _thread import *
 import sys
+import Network
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
@@ -15,8 +16,11 @@ except socket.error as e:
 s.listen(1)
 print("Waiting for a connection...")
 
+user_count = 0
+
 def unique_client(connection):
     connection.send(bytes("Test message", "utf-8"))
+    user_count += 1
 
 
 

@@ -1,5 +1,6 @@
 import socket
 
+
 class Network:
     def __init__(self, host:str) -> Network():
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -18,6 +19,6 @@ class Network:
             response = self.client.recv(512).decode()
             return response
         except socket.error as e:
-            print str(e)
+            print(str(e))
             return str(e)
 
