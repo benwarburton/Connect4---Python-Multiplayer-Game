@@ -23,15 +23,15 @@ class UI:
     screen = pygame.display.set_mode((WINDOW))
 
     def init(self):
-        pygame.display.set_caption("Connect 4")
-        self.screen.fill(self.BOARD_COLOR_BLUE)
+        pygame.display.set_caption("Connect 4")#set the window title to given string 
+        self.screen.fill(self.BOARD_COLOR_BLUE)#sets the color of the board to blue
         pygame.display.flip()
 
     def build_board(self):
 
         for c in range(self.COLUMNS):
             for r in range(self.ROWS):
-                pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35)
+                pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35) #draws a cirlce on the the screen in 6x7 board on the screen, and then gives it the size (length and width)
         
         pygame.display.update()
         
@@ -67,7 +67,51 @@ class GameUI(UI):
         else:
             return False
     def win_condition(self, board, pieces):
+        #this will check the win condition of the player and see if they have a connect 4 horizontally 
+        for column in range(self.COLUMNS-3):
 
+            for row in range(self.ROWS):
+
+                if (board[row][column] == pieces) and # as you can see, incrementing the j will check the respective rows for the connect 4
+                (board[row][column+1] == pieces) and 
+                (board[row][column+2] == pieces) and 
+                (board[row][column+3] == pieces): 
+                    return True
+        
+        #this will check the win condition of the player and see if they have a connect 4 vertically
+        for column in range(self.COLUMNS):
+
+            for row in range(self.ROWS-3):
+
+                if (board[row][column] == pieces) and #as you can see, incrementing the i will check the respective columns for the connect 4
+                (board[row+1][column] == pieces) and 
+                (board[row+2][column] == pieces) and 
+                (board[row+3][column] == pieces): 
+                    return True
+        
+        #this will check the win condition of the player and see if they have a connect 4 traveling "positively" in a diagonal direction
+        for column in range(self.COLUMNS-3):
+
+            for row in range(self.ROWS-3):
+
+                if (board[row][column] == pieces) and #as you can see, inrementing the i AND j will check the respective columns and rows heading in a diagonal, positive direction for the connect 4
+                (board[row+1][column+1] == pieces) and 
+                (board[row+2][column+2] == pieces) and 
+                (board[row+3][column+3] == pieces):
+
+                return True 
+        
+        #this will check the win condition of the player and see if they have a connect 4 traveling "negatively" in a diagonal direction
+        for column in range(self.COLUMNS-3):
+
+            for row in range(3, self.ROWS):
+
+                if (board[row][column] == pieces) and 
+                (board[row-1][column+1] == pieces) and 
+                (board[row-2][column+2] == pieces) and 
+                (board[row-3][column+3] == pieces):
+
+                return True
         return
 
 
