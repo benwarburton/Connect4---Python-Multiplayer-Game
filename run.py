@@ -6,8 +6,7 @@ import time
 if __name__ == '__main__':
     game = UI()
     game.init()
-    game.build_board()
-    time.sleep(5)
+    time.sleep(10)
     '''
     while True:
         for e in pygame.event.get():

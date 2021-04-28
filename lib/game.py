@@ -1,7 +1,7 @@
 import pygame
 import time
 import numpy as np
-#from lib.network import Network
+from lib.network import Network
 
 class UI:
     #colors of the game. blue for the board, red and yellow for the pieces, black to show empty spaces 
@@ -9,10 +9,9 @@ class UI:
     YELLOW_PIECE = (255, 255, 0)
     RED_PIECE = (255, 0, 0)
     EMPTY_SPACE = (255, 255, 255)
+    BLACK = (0,0,0)
 
     #game window size
-    WINDOW = ((800, 600))
-
     HEIGHT = 600
     WIDTH = 800
 
@@ -20,20 +19,57 @@ class UI:
     ROWS = 6
     COLUMNS = 7
 
-    screen = pygame.display.set_mode((WINDOW))
+    screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def init(self):
-        pygame.display.set_caption("Connect 4")
-        self.screen.fill(self.BOARD_COLOR_BLUE)
+        pygame.init()
+        self.build_board()
+        self.build_main_menu()
         pygame.display.flip()
 
     def build_board(self):
+        self.screen.fill(self.BOARD_COLOR_BLUE)
+        pygame.display.set_caption("Connect 4")
 
         for c in range(self.COLUMNS):
             for r in range(self.ROWS):
                 pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35)
         
         pygame.display.update()
+
+    def build_main_menu(self):
+        # init font
+        font = pygame.font.SysFont('timesnewroman', 90)
+
+        # build title
+        title = font.render('Connect4', True, self.YELLOW_PIECE, self.BOARD_COLOR_BLUE)
+        title_background = title.get_rect()
+        title_background.center = (400, 150)
+        # display title
+        self.screen.blit(title, title_background)
+
+        # build menu bar
+        pygame.draw.rect(self.screen, self.BLACK, pygame.Rect(0, 330, 800, 150))
+        pygame.display.flip()
+
+        # build connect button
+        connect_text = font.render('Online', True, self.RED_PIECE)
+        connect_text_background = connect_text.get_rect()
+        connect_text_background.center = (220, 400)
+        # display connect button
+        self.screen.blit(connect_text, connect_text_background)
+
+        # build start game button
+        start_text = font.render('Start', True, self.RED_PIECE)
+        start_text_background = start_text.get_rect()
+        start_text_background.center = (580, 400)
+        # display start game button
+        self.screen.blit(start_text, start_text_background)
+
+    def start(self):
+        # listen for which main menu button is picked, then
+        # send to specified method
+        return self
         
         
     def start_game(self, game):
@@ -47,9 +83,10 @@ class UI:
                     gameActive = False
                     
     def connect(self, address):
-        #self.net = Network(address)
-        #response = self.net.connect()
-        return self
+        self.net = Network(address)
+        response = self.net.connect()
+        
+        
         
 
 
