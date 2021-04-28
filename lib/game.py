@@ -114,45 +114,39 @@ class GameUI(UI):
     def win_condition(self, gameboard, pieces):
         #this will check the win condition of the player and see if they have a connect 4 horizontally 
         for column in range(self.COLUMNS-3):
-            for row in range(self.ROWS):
 
-                if (gameboard[row][column] == pieces) and # as you can see, incrementing the j will check the respective rows for the connect 4
-                (gameboard[row][column+1] == pieces) and 
-                (gameboard[row][column+2] == pieces) and 
-                (gameboard[row][column+3] == pieces): 
+            for row in range(self.ROWS):
+                # as you can see, incrementing the column will check the respective rows for the connect 4
+                if (gameboard[row][column] == pieces) and (gameboard[row][column+1] == pieces) and (gameboard[row][column+2] == pieces) and (gameboard[row][column+3] == pieces): 
+                    
                     return True
         
         #this will check the win condition of the player and see if they have a connect 4 vertically
         for column in range(self.COLUMNS):
-            for row in range(self.ROWS-3):
 
-                if (gameboard[row][column] == pieces) and #as you can see, incrementing the i will check the respective columns for the connect 4
-                (gameboard[row+1][column] == pieces) and 
-                (gameboard[row+2][column] == pieces) and 
-                (gameboard[row+3][column] == pieces): 
+            for row in range(self.ROWS-3):
+                #as you can see, incrementing the row will check the respective columns for the connect 4
+                if (gameboard[row][column] == pieces) and (gameboard[row+1][column] == pieces) and (gameboard[row+2][column] == pieces) and (gameboard[row+3][column] == pieces): 
+                    
                     return True
         
         #this will check the win condition of the player and see if they have a connect 4 traveling "positively" in a diagonal direction
         for column in range(self.COLUMNS-3):
+
             for row in range(self.ROWS-3):
+                #as you can see, inrementing the row AND column will check the respective columns and rows heading in a diagonal, positive direction for the connect 4
+                if (gameboard[row][column] == pieces) and (gameboard[row+1][column+1] == pieces) and (gameboard[row+2][column+2] == pieces) and (gameboard[row+3][column+3] == pieces):
 
-                if (gameboard[row][column] == pieces) and #as you can see, inrementing the i AND j will check the respective columns and rows heading in a diagonal, positive direction for the connect 4
-                (gameboard[row+1][column+1] == pieces) and 
-                (gameboard[row+2][column+2] == pieces) and 
-                (gameboard[row+3][column+3] == pieces):
-
-                return True 
+                    return True 
         
         #this will check the win condition of the player and see if they have a connect 4 traveling "negatively" in a diagonal direction
         for column in range(self.COLUMNS-3):
+
             for row in range(3, self.ROWS):
-
-                if (gameboard[row][column] == pieces) and 
-                (gameboard[row-1][column+1] == pieces) and 
-                (gameboard[row-2][column+2] == pieces) and 
-                (gameboard[row-3][column+3] == pieces):
-
-                return True
+                #as you can see, decrementing the row while incrementing the column will check the respective rows and columns heading in a diagonal, negative direction for the connect 4
+                if (gameboard[row][column] == pieces) and (gameboard[row-1][column+1] == pieces) and (gameboard[row-2][column+2] == pieces) and (gameboard[row-3][column+3] == pieces):
+                    
+                    return True
         return
 
 
