@@ -86,9 +86,6 @@ class UI:
         self.net = Network(address)
         response = self.net.connect()
         
-        
-        
-
 
 class GameUI(UI):
 
@@ -131,8 +128,6 @@ class GameUI(UI):
                 if (board[row][column] == pieces) and (board[row-1][column+1] == pieces) and (board[row-2][column+2] == pieces) and (board[row-3][column+3] == pieces):
                     return True
         return
-
-
     
 #Class UI:
 #Basic initliazation -> def init(self):
