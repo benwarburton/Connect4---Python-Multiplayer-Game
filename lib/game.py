@@ -58,24 +58,31 @@ class GameUI(UI):
     def init(self):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
         return gameboard
-    def move_piece(self):
+
+    def move_piece(self, gameboard, row, column, pieces):
+        gameboard[row][column] = pieces
         
-        return
+
     def isValidPlacement(self, gameboard, columnPos):
         if (gameboard[self.ROWS-1][self.COLUMNS] == 0):
             return True
         else:
             return False
-    def win_condition(self, board, pieces):
+
+    def getNextOpenRow(self, gameboard, column):
+
+        return 
+
+    def win_condition(self, gameboard, pieces):
         #this will check the win condition of the player and see if they have a connect 4 horizontally 
         for column in range(self.COLUMNS-3):
 
             for row in range(self.ROWS):
 
-                if (board[row][column] == pieces) and # as you can see, incrementing the j will check the respective rows for the connect 4
-                (board[row][column+1] == pieces) and 
-                (board[row][column+2] == pieces) and 
-                (board[row][column+3] == pieces): 
+                if (gameboard[row][column] == pieces) and # as you can see, incrementing the j will check the respective rows for the connect 4
+                (gameboard[row][column+1] == pieces) and 
+                (gameboard[row][column+2] == pieces) and 
+                (gameboard[row][column+3] == pieces): 
                     return True
         
         #this will check the win condition of the player and see if they have a connect 4 vertically
@@ -83,10 +90,10 @@ class GameUI(UI):
 
             for row in range(self.ROWS-3):
 
-                if (board[row][column] == pieces) and #as you can see, incrementing the i will check the respective columns for the connect 4
-                (board[row+1][column] == pieces) and 
-                (board[row+2][column] == pieces) and 
-                (board[row+3][column] == pieces): 
+                if (gameboard[row][column] == pieces) and #as you can see, incrementing the i will check the respective columns for the connect 4
+                (gameboard[row+1][column] == pieces) and 
+                (gameboard[row+2][column] == pieces) and 
+                (gameboard[row+3][column] == pieces): 
                     return True
         
         #this will check the win condition of the player and see if they have a connect 4 traveling "positively" in a diagonal direction
@@ -94,10 +101,10 @@ class GameUI(UI):
 
             for row in range(self.ROWS-3):
 
-                if (board[row][column] == pieces) and #as you can see, inrementing the i AND j will check the respective columns and rows heading in a diagonal, positive direction for the connect 4
-                (board[row+1][column+1] == pieces) and 
-                (board[row+2][column+2] == pieces) and 
-                (board[row+3][column+3] == pieces):
+                if (gameboard[row][column] == pieces) and #as you can see, inrementing the i AND j will check the respective columns and rows heading in a diagonal, positive direction for the connect 4
+                (gameboard[row+1][column+1] == pieces) and 
+                (gameboard[row+2][column+2] == pieces) and 
+                (gameboard[row+3][column+3] == pieces):
 
                 return True 
         
@@ -106,10 +113,10 @@ class GameUI(UI):
 
             for row in range(3, self.ROWS):
 
-                if (board[row][column] == pieces) and 
-                (board[row-1][column+1] == pieces) and 
-                (board[row-2][column+2] == pieces) and 
-                (board[row-3][column+3] == pieces):
+                if (gameboard[row][column] == pieces) and 
+                (gameboard[row-1][column+1] == pieces) and 
+                (gameboard[row-2][column+2] == pieces) and 
+                (gameboard[row-3][column+3] == pieces):
 
                 return True
         return
