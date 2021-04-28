@@ -1,3 +1,4 @@
 {
-    "python.pythonPath": "venv\\Scripts\\python.exe"
+    "python.pythonPath": "C:\\Users\\BenWa\\Desktop\\Classes\\Operating Systems\\Project 2\\Connect4---Python-Multiplayer-Game\\venv\\Scripts\\python.exe",
+    "python.analysis.extraPaths": ["lib", "C:\\Users\\BenWa\\Desktop\\Classes\\Operating Systems\\Project 2\\Connect4---Python-Multiplayer-Game\\lib"]
 }

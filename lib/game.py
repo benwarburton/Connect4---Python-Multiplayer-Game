@@ -1,13 +1,15 @@
 import pygame
+import time
 import numpy as np
-from Network import Network
+from lib.network import Network
 
 class UI:
     def init(self):
-        self.screen = pygame.display.set_caption("Connect 4")
         self.width = 800
         self.height = 600
-        self.screen = pygame.display.set_mode(self.width, self.height)
+        self.screen = pygame.display.set_mode((self.width, self.height))
+        self.screen = pygame.display.set_caption("Connect 4")
+        time.sleep(3)
         
     def start_game(self, game):
         pygame.display.flip()

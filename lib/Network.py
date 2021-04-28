@@ -2,11 +2,11 @@ import socket
 
 
 class Network:
-    def __init__(self, host:str) -> Network():
+    def __init__(self, host:str):
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.port = 1234
-        self.address = (host, port)
+        self.address = (host, self.port)
         self.id = self.connect()
 
     def connect(self) -> str:

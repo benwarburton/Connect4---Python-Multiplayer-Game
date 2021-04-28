@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\BenWa\Desktop\Classes\Operating Systems\Project 2\venv"
+VIRTUAL_ENV="C:\Users\BenWa\Desktop\Classes\Operating Systems\Project 2\Connect4---Python-Multiplayer-Game\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
