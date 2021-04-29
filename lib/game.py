@@ -4,7 +4,7 @@ import numpy as np
 import sys
 import math
 from lib.network import Network
-import subprocess
+from subprocess import call
 
 
 class UI:
@@ -23,12 +23,9 @@ class UI:
     ROWS = 6
     COLUMNS = 7
 
-
-
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def init(self):
-        self.net = Network("localhost")
         pygame.init()
         self.build_board()
         self.build_main_menu()
@@ -38,10 +35,9 @@ class UI:
         self.screen.fill(self.BOARD_COLOR_BLUE)
         pygame.display.set_caption("Connect 4")
 
-        #draws a circle on the the screen in 6x7 board on the screen, and then gives it the size (length and width
         for c in range(self.COLUMNS):
             for r in range(self.ROWS):
-                pygame.draw.circle(self.screen, self.EMPTY_SPACE,(c*110+70, r*95+50), 35)
+                pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35) #draws a cirlce on the the screen in 6x7 board on the screen, and then gives it the size (length and width)
         
         pygame.display.update()
 
@@ -60,16 +56,23 @@ class UI:
         pygame.draw.rect(self.screen, self.BLACK, pygame.Rect(0, 330, 800, 150))
         pygame.display.flip()
 
+        # build connect button
+        connect_text = font.render('Online', True, self.RED_PIECE)
+        connect_text_background = connect_text.get_rect()
+        connect_text_background.center = (220, 400)
+        # display connect button
+        self.screen.blit(connect_text, connect_text_background)
 
         # build start game button
         start_text = font.render('Start', True, self.RED_PIECE)
         start_text_background = start_text.get_rect()
-        start_text_background.center = (400, 400)
+        start_text_background.center = (580, 400)
         # display start game button
         self.screen.blit(start_text, start_text_background)
 
     def main_menu(self):
-        start_button = pygame.Rect(300, 350, 200, 100)
+        connect_button = pygame.Rect(150, 350, 200, 100)
+        start_button = pygame.Rect(500, 350, 200, 100)
 
         # listen for which main menu button is picked, then
         # send to specified method
@@ -77,20 +80,31 @@ class UI:
             for e in pygame.event.get():
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     mouse = e.pos
+                    if connect_button.collidepoint(mouse):
+                        self.connect()
                     if start_button.collidepoint(mouse):
                         self.start_game()
-                if e.type == pygame.QUIT:
-                    exit()
         
         
     def start_game(self):
-        # rebuild game board
+        #rebuild game board
         self.build_board()
-        game = GameUI(self)
-        board = game.init()
-        game.playGame()
-        
+        pygame.display.flip()
 
+        call(["python", "server.py"])
+        
+        gameActive = True
+
+        while gameActive:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameActive = False
+                    
+    def connect(self):
+        #self.net = Network(address)
+        #response = self.net.connect()
+        return
+        
 
 class GameUI(UI):
 
@@ -114,7 +128,6 @@ class GameUI(UI):
                     return row
 
     def win_condition(self, gameboard, pieces):
-
         #this will check the win condition of the player and see if they have a connect 4 horizontally 
         for column in range(self.COLUMNS-3):
 
@@ -151,7 +164,6 @@ class GameUI(UI):
                     
                     return True
         return
-    
     def playGame (self):
         gameTurn = 0
         gameCurrentlyActive = True
@@ -205,7 +217,7 @@ class GameUI(UI):
                                     self.screen.blit(playerTwoWinLabel, (40,10))
                                     gameCurrentlyActive = False
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
-
+        
 
         return
 #Class UI:
