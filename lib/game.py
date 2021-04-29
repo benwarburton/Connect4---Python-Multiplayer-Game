@@ -63,13 +63,12 @@ class UI:
         # build start game button
         start_text = font.render('Start', True, self.RED_PIECE)
         start_text_background = start_text.get_rect()
-        start_text_background.center = (400, 300)
+        start_text_background.center = (400, 400)
         # display start game button
         self.screen.blit(start_text, start_text_background)
 
     def main_menu(self):
-        connect_button = pygame.Rect(150, 350, 200, 100)
-        start_button = pygame.Rect(500, 350, 200, 100)
+        start_button = pygame.Rect(300, 350, 200, 100)
 
         # listen for which main menu button is picked, then
         # send to specified method
@@ -77,8 +76,6 @@ class UI:
             for e in pygame.event.get():
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     mouse = e.pos
-                    if connect_button.collidepoint(mouse):
-                        self.connect()
                     if start_button.collidepoint(mouse):
                         self.start_game()
                 if e.type == pygame.QUIT:
@@ -88,17 +85,11 @@ class UI:
     def start_game(self):
         # rebuild game board
         self.build_board()
-
-        # waiting for player to connect
-        font = pygame.font.SysFont('timesnewroman', 90)
-        waiting_text = font.render('Waiting for player...', True, self.RED_PIECE)
-        waiting_text_background = waiting_text.get_rect()
-        waiting_text_background.center = (400, 300)
-        self.screen.blit(waiting_text, waiting_text_background)
-        pygame.display.flip()
-
+        game = GameUI(self)
+        board = game.init()
+        game.playGame()
         
-        
+
 
 class GameUI(UI):
 
@@ -122,6 +113,7 @@ class GameUI(UI):
                     return row
 
     def win_condition(self, gameboard, pieces):
+
         #this will check the win condition of the player and see if they have a connect 4 horizontally 
         for column in range(self.COLUMNS-3):
 
@@ -158,6 +150,7 @@ class GameUI(UI):
                     
                     return True
         return
+    
     def playGame (self):
         gameTurn = 0
         gameCurrentlyActive = True
