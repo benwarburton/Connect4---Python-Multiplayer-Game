@@ -2,6 +2,7 @@ import pygame
 import time
 import numpy as np
 import sys
+import math
 from lib.network import Network
 import subprocess
 
@@ -93,7 +94,7 @@ class UI:
 
 class GameUI(UI):
 
-    def init(self):
+    def initalize(self):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
         return gameboard
 
@@ -154,7 +155,8 @@ class GameUI(UI):
     def playGame (self):
         gameTurn = 0
         gameCurrentlyActive = True
-        
+        gameBoard = self.initalize()
+        winnerLabel = pygame.font.SysFont("timesnewroman", 75)
 
         while gameCurrentlyActive:
 
@@ -172,7 +174,37 @@ class GameUI(UI):
 
                 if gameEvent.type == pygame.MOUSEBUTTONDOWN:
                     pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
-        #This all kind of is moot because we have to let the players do it from their clients, so this is what i have so far.    
+
+                    #If it player one's turn based on the value of gameTurn, it will check for the valid locations to place a piece, get the next open rows, drop a piece, and then check to see if there is a winning move.
+                    #The same thing will occur in the same process for player two if it is player two's turn instead of player one's. 
+
+                    if gameTurn == 0:
+
+                        columns = int(math.floor(positionX/100))
+                        positionX = gameEvent.pos[0]
+
+                        if self.isValidPlacement(gameBoard, columns):
+                            row = self.getNextOpenRow(gameBoard, columns)
+                            self.move_piece(gameBoard, row, columns, 1)
+
+                            if self.win_condition(gameBoard, 1):
+                                playerOneWinLabel = winnerLabel.render("Player One Wins! :)", 1, self.RED_PIECE)
+                                self.screen.blit(playerOneWinLabel, (40,10))
+                                gameCurrentlyActive = False
+                    else:
+
+                        positionX = gameEvent.pos[0]
+                        columns = int(math.floor(positionX/100))
+
+                        if self.isValidPlacement(gameBoard, columns):
+                                row = self.getNextOpenRow(gameBoard, columns)
+                                self.move_piece(gameBoard, row, columns, 2)
+
+                                if self.win_condition(gameBoard, 2):
+                                    playerTwoWinLabel = winnerLabel.render("Player Two Wins! :)", 1, self.YELLOW_PIECE)
+                                    self.screen.blit(playerTwoWinLabel, (40,10))
+                                    gameCurrentlyActive = False
+        #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
 
 
         return
