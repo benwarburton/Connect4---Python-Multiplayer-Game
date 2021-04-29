@@ -1,6 +1,7 @@
 import pygame
 import time
 import numpy as np
+import sys
 from lib.network import Network
 
 class UI:
@@ -145,7 +146,31 @@ class GameUI(UI):
                     
                     return True
         return
-    
+    def playGame (self):
+        gameTurn = 0
+        gameCurrentlyActive = True
+        
+
+        while gameCurrentlyActive:
+
+            for gameEvent in pygame.event.get():
+                if gameEvent.type == pygame.QUIT:
+                    sys.exit()
+                if gameEvent.type == pygame.MOUSEMOTION:
+                    pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
+                    positionX = gameEvent.pos[0]
+                    if gameTurn == 0:
+                        pygame.draw.circle(self.screen, self.RED, (positionX, int(100/2)), int(100/2 - 5))
+                    else:
+                        pygame.draw.circle(self.screen, self.YELLOW_PIECE, (positionX, int(100/2)), int(100/2 - 5))
+                pygame.display.update()
+
+                if gameEvent.type == pygame.MOUSEBUTTONDOWN:
+                    pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
+        #This all kind of is moot because we have to let the players do it from their clients, so this is what i have so far.    
+
+
+        return
 #Class UI:
 #Basic initliazation -> def init(self):
 #Class GameUI inherit from UI:
