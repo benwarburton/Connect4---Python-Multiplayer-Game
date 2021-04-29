@@ -108,7 +108,7 @@ class UI:
 
 class GameUI(UI):
 
-    def initalize(self):
+    def initalize(self, gameboard):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
         return gameboard
 
@@ -216,8 +216,13 @@ class GameUI(UI):
                                     playerTwoWinLabel = winnerLabel.render("Player Two Wins! :)", 1, self.YELLOW_PIECE)
                                     self.screen.blit(playerTwoWinLabel, (40,10))
                                     gameCurrentlyActive = False
+                    
+                    self.build_board(gameBoard)
+                    self.initalize(gameBoard)
+                    gameTurn += 1
+                    gameTurn = gameTurn % 2
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
-        
+
 
         return
 #Class UI:
