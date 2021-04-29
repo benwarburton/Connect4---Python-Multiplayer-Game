@@ -5,8 +5,8 @@ class Network:
         self.client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         self.host = host
         self.port = 1234
-        self.address = (host, self.port)
-        self.id = self.connect()
+        self.address = (self.host, self.port)
+        self.identifier = self.connect()
 
     def connect(self) -> str:
         self.client.connect(self.address)

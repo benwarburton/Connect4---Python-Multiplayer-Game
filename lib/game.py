@@ -2,7 +2,7 @@ import pygame
 import time
 import numpy as np
 from lib.network import Network
-from subprocess import call
+import subprocess
 
 
 class UI:
@@ -21,9 +21,12 @@ class UI:
     ROWS = 6
     COLUMNS = 7
 
+
+
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def init(self):
+        self.net = Network("localhost")
         pygame.init()
         self.build_board()
         self.build_main_menu()
@@ -33,9 +36,10 @@ class UI:
         self.screen.fill(self.BOARD_COLOR_BLUE)
         pygame.display.set_caption("Connect 4")
 
+        #draws a circle on the the screen in 6x7 board on the screen, and then gives it the size (length and width
         for c in range(self.COLUMNS):
             for r in range(self.ROWS):
-                pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35) #draws a cirlce on the the screen in 6x7 board on the screen, and then gives it the size (length and width)
+                pygame.draw.circle(self.screen, self.EMPTY_SPACE,(c*110+70, r*95+50), 35)
         
         pygame.display.update()
 
@@ -54,17 +58,11 @@ class UI:
         pygame.draw.rect(self.screen, self.BLACK, pygame.Rect(0, 330, 800, 150))
         pygame.display.flip()
 
-        # build connect button
-        connect_text = font.render('Online', True, self.RED_PIECE)
-        connect_text_background = connect_text.get_rect()
-        connect_text_background.center = (220, 400)
-        # display connect button
-        self.screen.blit(connect_text, connect_text_background)
 
         # build start game button
         start_text = font.render('Start', True, self.RED_PIECE)
         start_text_background = start_text.get_rect()
-        start_text_background.center = (580, 400)
+        start_text_background.center = (400, 300)
         # display start game button
         self.screen.blit(start_text, start_text_background)
 
@@ -82,26 +80,23 @@ class UI:
                         self.connect()
                     if start_button.collidepoint(mouse):
                         self.start_game()
+                if e.type == pygame.QUIT:
+                    exit()
         
         
     def start_game(self):
-        #rebuild game board
+        # rebuild game board
         self.build_board()
+
+        # waiting for player to connect
+        font = pygame.font.SysFont('timesnewroman', 90)
+        waiting_text = font.render('Waiting for player...', True, self.RED_PIECE)
+        waiting_text_background = waiting_text.get_rect()
+        waiting_text_background.center = (400, 300)
+        self.screen.blit(waiting_text, waiting_text_background)
         pygame.display.flip()
 
-        call(["python", "server.py"])
         
-        gameActive = True
-
-        while gameActive:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    gameActive = False
-                    
-    def connect(self):
-        #self.net = Network(address)
-        #response = self.net.connect()
-        return
         
 
 class GameUI(UI):

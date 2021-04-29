@@ -16,9 +16,29 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection...")
 
+current_identifier = 0
 
 def unique_client(connection):
-    connection.send(bytes("Test message", "utf-8"))
+    connection.send(str.encode(current_identifier))
+    current_identifier = 1
+    message = ''
+    while True:
+        try:
+            data = connection.recv(2048)
+            message = data.decode('utf-8')
+            if data is None:
+                connection.send(str.encode("Ending session"))
+            else:
+                log = message.split(',')
+                id = int(log[0])
+                move = str(log[1])
+            
+            connection.sendall(str.encode(message))
+        except:
+            break
+    
+    print("Connection terminated")
+    connection.close()
     
 
 
@@ -30,7 +50,8 @@ while True:
     accepting the connection
     '''
     connection, address = s.accept()
-    print("New connection: ", address)
-
+    print("Connected!")
+    print("Player found: ", address)
+    game_active = True
     # Start a new thread for each unique client
     start_new_thread(unique_client, (connection,))
