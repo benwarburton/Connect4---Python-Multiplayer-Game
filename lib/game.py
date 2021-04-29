@@ -2,6 +2,8 @@ import pygame
 import time
 import numpy as np
 from lib.network import Network
+from subprocess import call
+
 
 class UI:
     #colors of the game. blue for the board, red and yellow for the pieces, black to show empty spaces 
@@ -66,15 +68,29 @@ class UI:
         # display start game button
         self.screen.blit(start_text, start_text_background)
 
-    def start(self):
+    def main_menu(self):
+        connect_button = pygame.Rect(150, 350, 200, 100)
+        start_button = pygame.Rect(500, 350, 200, 100)
+
         # listen for which main menu button is picked, then
         # send to specified method
-        return self
+        while True:
+            for e in pygame.event.get():
+                if e.type == pygame.MOUSEBUTTONDOWN:
+                    mouse = e.pos
+                    if connect_button.collidepoint(mouse):
+                        self.connect()
+                    if start_button.collidepoint(mouse):
+                        self.start_game()
         
         
-    def start_game(self, game):
+    def start_game(self):
+        #rebuild game board
+        self.build_board()
         pygame.display.flip()
 
+        call(["python", "server.py"])
+        
         gameActive = True
 
         while gameActive:
@@ -82,9 +98,10 @@ class UI:
                 if event.type == pygame.QUIT:
                     gameActive = False
                     
-    def connect(self, address):
-        self.net = Network(address)
-        response = self.net.connect()
+    def connect(self):
+        #self.net = Network(address)
+        #response = self.net.connect()
+        return
         
 
 class GameUI(UI):
