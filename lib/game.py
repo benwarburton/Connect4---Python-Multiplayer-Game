@@ -25,7 +25,6 @@ class UI:
     net = None
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-    #Initliaze board and network, and then display to the user
     def init(self):
         self.net = Network('localhost')      
         pygame.init()
@@ -34,18 +33,16 @@ class UI:
         pygame.display.flip()
         self.main_menu()
 
-    #Build the game board by setting the window caption, filling the screen, and then creating the circles on the screen
     def build_board(self):
-        self.screen.fill(self.BOARD_COLOR_BLUE) #fill screen
+        self.screen.fill(self.BOARD_COLOR_BLUE)
         pygame.display.set_caption("Connect 4")
 
-        for c in range(self.COLUMNS): #create seven columns
-            for r in range(self.ROWS): #create six rows
+        for c in range(self.COLUMNS):
+            for r in range(self.ROWS):
                 pygame.draw.circle(self.screen, self.EMPTY_SPACE,  (c*110+70, r*95+50), 35) #draws a cirlce on the the screen in 6x7 board on the screen, and then gives it the size (length and width)
         
-        pygame.display.update() #update display to user
+        pygame.display.update()
 
-    #builds the main menu
     def build_main_menu(self):
         # init font
         font = pygame.font.SysFont('timesnewroman', 90)
@@ -80,7 +77,7 @@ class UI:
                     if start_button.collidepoint(mouse):
                         self.start_game()
         
-       
+        
     def start_game(self):
         #rebuild game board
         self.build_board()
@@ -112,6 +109,8 @@ class GameUI(UI):
             return True
         else:
             return False
+
+
 
     def getNextOpenRow(self, gameboard, column):
         for row in range(self.ROWS):
@@ -155,7 +154,7 @@ class GameUI(UI):
                     
                     return True
         return
-    def playGame(self, net):
+    def playGame (self, net):
         gameTurn = 1
 
         order = 0
