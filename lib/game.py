@@ -218,17 +218,6 @@ class GameUI(UI):
                                 gameCurrentlyActive = False
 
                         gameTurn += 1
-                        
-            """ else:
-                opponents_move = net.await_data()
-                d = opponents_move.split(":")
-                print(d)
-                self.move_piece(gameBoard, int(d[0]), int(d[1]), other, other_color)
-                pygame.display.flip()
-                print('switch turns') """
-                
-
-                
 
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
 
