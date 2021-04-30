@@ -4,7 +4,6 @@ import numpy as np
 import sys
 import math
 from lib.network import Network
-import subprocess
 
 
 class UI:
@@ -22,8 +21,6 @@ class UI:
     #other constants
     ROWS = 6
     COLUMNS = 7
-
-
 
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
@@ -86,8 +83,7 @@ class UI:
     def start_game(self):
         # rebuild game board
         self.build_board()
-        game = GameUI(self)
-        board = game.init()
+        game = GameUI()
         game.playGame()
         
 
@@ -153,13 +149,20 @@ class GameUI(UI):
         return
     
     def playGame (self):
-        gameTurn = 0
+        gameTurn = 1
+
+        order = 0
         gameCurrentlyActive = True
         gameBoard = self.initalize()
         winnerLabel = pygame.font.SysFont("timesnewroman", 75)
 
-        while gameCurrentlyActive:
+        if (self.net.client_id*10)%2 != 0:
+            order = 0
+        else: order = 1
 
+        while gameCurrentlyActive:
+            if gameTurn % order == 0:
+                break
             for gameEvent in pygame.event.get():
                 if gameEvent.type == pygame.QUIT:
                     sys.exit()
@@ -167,7 +170,7 @@ class GameUI(UI):
                     pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
                     positionX = gameEvent.pos[0]
                     if gameTurn == 0:
-                        pygame.draw.circle(self.screen, self.RED, (positionX, int(100/2)), int(100/2 - 5))
+                        pygame.draw.circle(self.screen, self.RED_PIECE, (positionX, int(100/2)), int(100/2 - 5))
                     else:
                         pygame.draw.circle(self.screen, self.YELLOW_PIECE, (positionX, int(100/2)), int(100/2 - 5))
                 pygame.display.update()
@@ -205,7 +208,6 @@ class GameUI(UI):
                                     self.screen.blit(playerTwoWinLabel, (40,10))
                                     gameCurrentlyActive = False
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
-
 
         return
 #Class UI:

@@ -16,10 +16,10 @@ except socket.error as e:
 s.listen(2)
 print("Waiting for a connection...")
 
-current_identifier = 1
+current_identifier = '1'
 
 def unique_client(connection, current_identifier):
-    connection.send(bytes(current_identifier))
+    connection.send(str.encode(current_identifier))
     message = ''
     while True:
         try:
@@ -53,4 +53,4 @@ while True:
     print("Player found: ", current_identifier, address)
     # Start a new thread for each unique client
     start_new_thread(unique_client, (connection, current_identifier))
-    current_identifier += 1
+    current_identifier = str(int(current_identifier) + 1)
