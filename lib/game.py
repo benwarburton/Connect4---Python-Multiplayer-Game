@@ -97,6 +97,7 @@ class GameUI(UI):
 
     def initalize(self):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
+        print(gameboard)
         return gameboard
 
     def move_piece(self, gameboard, row, column, pieces):
