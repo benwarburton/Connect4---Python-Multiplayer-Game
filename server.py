@@ -28,12 +28,9 @@ def unique_client(connection, current_identifier):
             if data is None:
                 connection.send(str.encode("Ending session"))
             else:
-                log = message.split(',')
-                id = int(log[0])
-                move = str(log[1])
-            
-            connection.sendall(str.encode(message))
-        except:
+                connection.sendall(str.encode(message))
+        except socket.error as e:
+            print(str(e))
             break
     
     print("Connection terminated")
