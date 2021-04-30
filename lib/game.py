@@ -97,6 +97,7 @@ class GameUI(UI):
 
     def initalize(self):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
+        print(gameboard)
         return gameboard
 
     def move_piece(self, gameboard, row, column, pieces):
@@ -217,8 +218,8 @@ class GameUI(UI):
                                         self.screen.blit(playerTwoWinLabel, (40,10))
                                         gameCurrentlyActive = False
                         
-                        self.build_board(gameBoard)
-                        self.initalize(gameBoard)
+                        self.build_board()
+                        self.initalize()
                         gameTurn += 1
                         gameTurn = gameTurn % 2
             else: return
