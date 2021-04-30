@@ -18,17 +18,23 @@ print("Waiting for a connection...")
 
 current_identifier = '1'
 
+connections = []
+
 def unique_client(connection, current_identifier):
+    global connections
+    connections += [connection]
     connection.send(str.encode(current_identifier))
     message = ''
     while True:
         try:
-            data = connection.recv(2048)
+            data = connection.recv(3)
             message = data.decode('utf-8')
+           
             if data is None:
                 connection.send(str.encode("Ending session"))
             else:
-                connection.sendall(str.encode(message))
+                for conn in connections:
+                    conn.sendall(str.encode(message))
         except socket.error as e:
             print(str(e))
             break
