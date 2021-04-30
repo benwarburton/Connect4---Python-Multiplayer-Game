@@ -22,13 +22,16 @@ class UI:
     ROWS = 6
     COLUMNS = 7
 
+    net = None
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
     def init(self):
+        self.net = Network('localhost')      
         pygame.init()
         self.build_board()
         self.build_main_menu()
         pygame.display.flip()
+        self.main_menu()
 
     def build_board(self):
         self.screen.fill(self.BOARD_COLOR_BLUE)
@@ -55,23 +58,15 @@ class UI:
         pygame.draw.rect(self.screen, self.BLACK, pygame.Rect(0, 330, 800, 150))
         pygame.display.flip()
 
-        # build connect button
-        connect_text = font.render('Online', True, self.RED_PIECE)
-        connect_text_background = connect_text.get_rect()
-        connect_text_background.center = (220, 400)
-        # display connect button
-        self.screen.blit(connect_text, connect_text_background)
-
         # build start game button
         start_text = font.render('Start', True, self.RED_PIECE)
         start_text_background = start_text.get_rect()
-        start_text_background.center = (580, 400)
+        start_text_background.center = (400, 400)
         # display start game button
         self.screen.blit(start_text, start_text_background)
 
     def main_menu(self):
-        connect_button = pygame.Rect(150, 350, 200, 100)
-        start_button = pygame.Rect(500, 350, 200, 100)
+        start_button = pygame.Rect(300, 350, 200, 100)
 
         # listen for which main menu button is picked, then
         # send to specified method
@@ -79,8 +74,6 @@ class UI:
             for e in pygame.event.get():
                 if e.type == pygame.MOUSEBUTTONDOWN:
                     mouse = e.pos
-                    if connect_button.collidepoint(mouse):
-                        self.connect()
                     if start_button.collidepoint(mouse):
                         self.start_game()
         
@@ -89,7 +82,7 @@ class UI:
         #rebuild game board
         self.build_board()
         game = GameUI()
-        game.playGame()
+        game.playGame(self.net)
         
         gameActive = True
 
@@ -98,15 +91,11 @@ class UI:
                 if event.type == pygame.QUIT:
                     gameActive = False
                     
-    def connect(self):
-        #self.net = Network(address)
-        #response = self.net.connect()
-        return
         
 
 class GameUI(UI):
 
-    def initalize(self, gameboard):
+    def initalize(self):
         gameboard = np.zeros((self.ROWS,self.COLUMNS))
         return gameboard
 
@@ -119,6 +108,11 @@ class GameUI(UI):
             return True
         else:
             return False
+
+    def wait_for_opponent(self):
+        while True:
+            break
+        return
 
     def getNextOpenRow(self, gameboard, column):
         for row in range(self.ROWS):
@@ -162,7 +156,7 @@ class GameUI(UI):
                     
                     return True
         return
-    def playGame (self):
+    def playGame (self, net):
         gameTurn = 1
 
         order = 0
@@ -170,62 +164,65 @@ class GameUI(UI):
         gameBoard = self.initalize()
         winnerLabel = pygame.font.SysFont("timesnewroman", 75)
 
-        if (self.net.client_id*10)%2 != 0:
+        
+        if (int(net.client_id)) % 2 == 0:
             order = 0
-        else: order = 1
+            print('player 1')
+        else: order = 1; print('player 2')
+
+        if order == 0: color = self.RED_PIECE
+        else: color = self.YELLOW_PIECE
 
         while gameCurrentlyActive:
-            if gameTurn % order == 0:
-                break
-            for gameEvent in pygame.event.get():
-                if gameEvent.type == pygame.QUIT:
-                    sys.exit()
-                if gameEvent.type == pygame.MOUSEMOTION:
-                    pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
-                    positionX = gameEvent.pos[0]
-                    if gameTurn == 0:
-                        pygame.draw.circle(self.screen, self.RED_PIECE, (positionX, int(100/2)), int(100/2 - 5))
-                    else:
-                        pygame.draw.circle(self.screen, self.YELLOW_PIECE, (positionX, int(100/2)), int(100/2 - 5))
-                pygame.display.update()
-
-                if gameEvent.type == pygame.MOUSEBUTTONDOWN:
-                    pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
-
-                    #If it player one's turn based on the value of gameTurn, it will check for the valid locations to place a piece, get the next open rows, drop a piece, and then check to see if there is a winning move.
-                    #The same thing will occur in the same process for player two if it is player two's turn instead of player one's. 
-
-                    if gameTurn == 0:
-
-                        columns = int(math.floor(positionX/100))
+            if gameTurn == order:
+                for gameEvent in pygame.event.get():
+                    if gameEvent.type == pygame.QUIT:
+                        sys.exit()
+                    if gameEvent.type == pygame.MOUSEMOTION:
+                        pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
                         positionX = gameEvent.pos[0]
+                        pygame.draw.circle(self.screen, color, (positionX, int(100/2)), int(100/2 - 5))
+                    pygame.display.update()
 
-                        if self.isValidPlacement(gameBoard, columns):
-                            row = self.getNextOpenRow(gameBoard, columns)
-                            self.move_piece(gameBoard, row, columns, 1)
+                    if gameEvent.type == pygame.MOUSEBUTTONDOWN:
+                        pygame.draw.rect(self.screen, self.BLACK, (0,0, self.WIDTH, 100))
 
-                            if self.win_condition(gameBoard, 1):
-                                playerOneWinLabel = winnerLabel.render("Player One Wins! :)", 1, self.RED_PIECE)
-                                self.screen.blit(playerOneWinLabel, (40,10))
-                                gameCurrentlyActive = False
-                    else:
+                        #If it player one's turn based on the value of gameTurn, it will check for the valid locations to place a piece, get the next open rows, drop a piece, and then check to see if there is a winning move.
+                        #The same thing will occur in the same process for player two if it is player two's turn instead of player one's. 
 
-                        positionX = gameEvent.pos[0]
-                        columns = int(math.floor(positionX/100))
+                        if gameTurn == 0:
 
-                        if self.isValidPlacement(gameBoard, columns):
+                            columns = int(math.floor(positionX/100))
+                            positionX = gameEvent.pos[0]
+
+                            if self.isValidPlacement(gameBoard, columns):
                                 row = self.getNextOpenRow(gameBoard, columns)
-                                self.move_piece(gameBoard, row, columns, 2)
+                                self.move_piece(gameBoard, row, columns, 1)
 
-                                if self.win_condition(gameBoard, 2):
-                                    playerTwoWinLabel = winnerLabel.render("Player Two Wins! :)", 1, self.YELLOW_PIECE)
-                                    self.screen.blit(playerTwoWinLabel, (40,10))
+                                if self.win_condition(gameBoard, 1):
+                                    playerOneWinLabel = winnerLabel.render("Player One Wins! :)", 1, color)
+                                    self.screen.blit(playerOneWinLabel, (40,10))
                                     gameCurrentlyActive = False
-                    
-                    self.build_board(gameBoard)
-                    self.initalize(gameBoard)
-                    gameTurn += 1
-                    gameTurn = gameTurn % 2
+                        else:
+
+                            positionX = gameEvent.pos[0]
+                            columns = int(math.floor(positionX/100))
+
+                            if self.isValidPlacement(gameBoard, columns):
+                                    row = self.getNextOpenRow(gameBoard, columns)
+                                    self.move_piece(gameBoard, row, columns, 2)
+
+                                    if self.win_condition(gameBoard, 2):
+                                        playerTwoWinLabel = winnerLabel.render("Player Two Wins! :)", 1, color)
+                                        self.screen.blit(playerTwoWinLabel, (40,10))
+                                        gameCurrentlyActive = False
+                        
+                        self.build_board(gameBoard)
+                        self.initalize(gameBoard)
+                        gameTurn += 1
+                        gameTurn = gameTurn % 2
+            else: return
+
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
 
         return
