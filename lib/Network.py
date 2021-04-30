@@ -15,7 +15,7 @@ class Network:
     #SEt up the client to connect to the given host address, as well as get the client id and return it 
     def connect(self) -> str:
         self.client.connect(self.address)
-        msg = self.client.recv(2048).decode()
+        msg = self.client.recv(3).decode()
         self.client_id = msg
         return msg
 
@@ -23,7 +23,7 @@ class Network:
     def send_data(self, data:str) -> str:
         try:
             self.client.send(str.encode(data))
-            response = self.client.recv(2048).decode()
+            response = self.client.recv(3).decode()
             return response
         except socket.error as e:
             print(str(e))
@@ -32,12 +32,11 @@ class Network:
     #Server/Client awaits for the date to be decoded and returned, if unable to do so, print the socket error from the try/catch
     def await_data(self):
         while True:
-            try:
-                data = self.client.recv(2048)
-                message = data.decode('utf-8')
+            data = self.client.recv(3)
+            message = data.decode('utf-8')
+            if message is not None:
                 return message
-            except socket.error as e:
-                print(str(e))
-                return None
+            
+
 
 
