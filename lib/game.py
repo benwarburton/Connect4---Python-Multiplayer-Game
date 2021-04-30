@@ -104,7 +104,7 @@ class GameUI(UI):
         
 
     def isValidPlacement(self, gameboard, columnPos):
-        if (gameboard[self.ROWS-1][self.COLUMNS] == 0):
+        if (gameboard[self.ROWS-1][columnPos] == 0):
             return True
         else:
             return False
