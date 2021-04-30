@@ -26,4 +26,15 @@ class Network:
         except socket.error as e:
             print(str(e))
             return str(e)
+    
+    def await_data(self):
+        while True:
+            try:
+                data = self.client.recv(2048)
+                message = data.decode('utf-8')
+                return message
+            except socket.error as e:
+                print(str(e))
+                return None
+
 

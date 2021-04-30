@@ -217,11 +217,12 @@ class GameUI(UI):
                                         self.screen.blit(playerTwoWinLabel, (40,10))
                                         gameCurrentlyActive = False
                         
-                        self.build_board(gameBoard)
-                        self.initalize(gameBoard)
+                        self.build_board()
+                        self.initalize()
                         gameTurn += 1
                         gameTurn = gameTurn % 2
-            else: return
+            else: 
+                opponents_move = net.await_data()
 
         #At this point, the game has ended and we want to ask the players if they still want to play. If they do, they will both have to click online again in order to head back into the game. if they don't the threads will close and the game will end. 
 
